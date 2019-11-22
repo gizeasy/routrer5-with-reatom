@@ -11,12 +11,34 @@ export const ROUTES_NAMES = {
 };
 
 export const routes = [
-    { name: ROUTES_NAMES.ROOT, path: '/' },
-    { name: ROUTES_NAMES.SECTION_1, path: '/section-1' },
-    { name: ROUTES_NAMES.SECTION_1_PAGE, path: '/page?:param' },
-    { name: ROUTES_NAMES.SECTION_2, path: '/section-2' },
-    { name: ROUTES_NAMES.SECTION_2_PAGE, path: '/page:param' },
+    {
+        name: ROUTES_NAMES.ROOT,
+        path: '/',
+        title: 'mainPage',
+        needAuth: false,
+    },
+    {
+        name: ROUTES_NAMES.SECTION_1,
+        path: '/section-1',
+    },
+    {
+        name: ROUTES_NAMES.SECTION_1_PAGE,
+        path: '/page?:param',
+    },
+    {
+        name: ROUTES_NAMES.SECTION_2,
+        path: '/section-2',
+    },
+    {
+        name: ROUTES_NAMES.SECTION_2_PAGE,
+        path: '/page:param',
+    },
 ];
+
+const withRouteConfig = (routes) => () => (toState) => {
+    const currentRouteConfig = routes.find((route) => route.name === toState.name);
+    return Promise.resolve({ ...currentRouteConfig, ...toState });
+};
 
 export function configRouter() {
     const router = createRouter(routes, {
@@ -24,10 +46,8 @@ export function configRouter() {
     });
 
     router.usePlugin(loggerPlugin);
-    router.usePlugin(
-        browserPlugin()
-    );
-
+    router.usePlugin(browserPlugin());
+    router.useMiddleware(withRouteConfig(routes));
     return router;
 }
 

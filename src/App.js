@@ -9,6 +9,7 @@ import { routerAtom } from './router5reatom/plugin';
 
 export function App() {
     const routerName = useAtom(routerAtom, (state) => state.route && state.route.name);
+    const routerTitle = useAtom(routerAtom, (state) => state.route && state.route.title);
 
     const handleNavigateToSection1Page = useAction(() =>
         navigateTo({ name: ROUTES_NAMES.SECTION_1_PAGE, params: {param: 'foo'} })
@@ -18,7 +19,7 @@ export function App() {
     return (
         <div className="App">
             <header className="App-header">
-                <p className="App-PageTitle">{routerName}</p>
+                <p className="App-PageTitle">{routerTitle || routerName}</p>
                 <img src={logo} className="App-logo" alt="logo" />
                 <Link className="App-link" routeName={ROUTES_NAMES.ROOT}>
                     ROOT - Link

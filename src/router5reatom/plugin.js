@@ -1,4 +1,4 @@
-import { declareAction, declareAtom } from '@reatom/core';
+import { declareAction, declareAtom, getTree } from '@reatom/core';
 
 export const start = declareAction();
 export const stop = declareAction();
@@ -67,24 +67,12 @@ const plugin = (dispatch) => {
     });
 };
 
-export function getAtomName(atom) {
-    return Object.keys(atom())[0]; // как еще можно достать имя атома?
-}
-
-export function getActionType(action) {
-    return action().type; // так ли достовать тип ?
-}
-
 export function router5WithReatom(store, router) {
     const dispatch = store.dispatch;
-    const navigateToType = getActionType(navigateTo);
-    const cancelTransitionType = getActionType(cancelTransition);
-    const canDeactivateType = getActionType(canDeactivate);
-    const canActivateType = getActionType(canActivate);
-
-    // в этом месте dispatch не срабатывает, ни ошибки ни чего
-    // хотел тут задиспачить начальный стейт роутера
-    // вместо этого пришлось создавать getInitRouterAtomState
+    const navigateToType = navigateTo.getType();
+    const cancelTransitionType = cancelTransition.getType();
+    const canDeactivateType = canDeactivate.getType();
+    const canActivateType = canActivate.getType();
 
     router.usePlugin(plugin(dispatch));
 
@@ -108,9 +96,9 @@ export function router5WithReatom(store, router) {
     });
 }
 
-export function getInitRouterAtomState(router) {
+export function createInitStateByRouter(router) {
     return {
-        [getAtomName(routerAtom)]: {
+        [getTree(routerAtom).id]: {
             ...initState,
             route: router.getState(),
         },
