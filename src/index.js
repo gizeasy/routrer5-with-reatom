@@ -7,10 +7,10 @@ import * as serviceWorker from './serviceWorker';
 import { router } from './modules/router';
 import { context } from '@reatom/react';
 import { createStore } from '@reatom/core';
-import { router5WithReatom, createInitStateByRouter, routerAtom } from './router5reatom/plugin';
+import { router5WithReatom, createInitialStateByRouter } from './router5reatom/plugin';
 
 function Root({ router }) {
-    const store = createStore(routerAtom, createInitStateByRouter(router));
+    const store = createStore(createInitialStateByRouter(router));
     router5WithReatom(store, router);
     return (
         <context.Provider value={store}>

@@ -12,14 +12,14 @@ export const canDeactivate = declareAction();
 export const canActivate = declareAction();
 export const clearErrors = declareAction();
 
-const initState = {
+const initialState = {
     route: null,
     previousRoute: null,
     transitionRoute: null,
     transitionError: null,
 };
 
-export const routerAtom = declareAtom(initState, (on) => [
+export const routerAtom = declareAtom(initialState, (on) => [
     on(transitionStart, (state, { toState, fromState }) => ({
         ...state,
         transitionRoute: toState,
@@ -96,10 +96,10 @@ export function router5WithReatom(store, router) {
     });
 }
 
-export function createInitStateByRouter(router) {
+export function createInitialStateByRouter(router) {
     return {
         [getTree(routerAtom).id]: {
-            ...initState,
+            ...initialState,
             route: router.getState(),
         },
     };
